@@ -37,7 +37,8 @@ std::vector<int> convertJavaArrayToVector(JNIEnv *env, jintArray intArray){
     return v;
 }
 
-extern "C"
+extern "C" {
+
 JNIEXPORT void JNICALL
 Java_com_example_oboe_megadrone_MainActivity_startEngine(JNIEnv *env, jobject instance,
                                                          jintArray jCpuIds) {
@@ -46,7 +47,6 @@ Java_com_example_oboe_megadrone_MainActivity_startEngine(JNIEnv *env, jobject in
     engine.start(cpuIds);
 }
 
-extern "C"
 JNIEXPORT void JNICALL
 Java_com_example_oboe_megadrone_MainActivity_stopEngine(JNIEnv *env, jobject instance) {
 
@@ -54,10 +54,19 @@ Java_com_example_oboe_megadrone_MainActivity_stopEngine(JNIEnv *env, jobject ins
 
 }
 
-
-extern "C"
 JNIEXPORT void JNICALL
 Java_com_example_oboe_megadrone_MainActivity_tap(JNIEnv *env, jobject instance, jboolean b) {
 
     engine.tap(b);
 }
+
+JNIEXPORT void JNICALL
+Java_com_example_oboe_megadrone_MainActivity_native_1setDefaultStreamValues(JNIEnv *env,
+                                                                            jclass type,
+                                                                            jint sampleRate,
+                                                                            jint framesPerBurst) {
+    oboe::DefaultStreamValues::SampleRate = (int32_t) sampleRate;
+    oboe::DefaultStreamValues::FramesPerBurst = (int32_t) framesPerBurst;
+}
+
+} // extern "C"
