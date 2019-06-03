@@ -266,8 +266,12 @@ DataCallbackResult AudioStreamAAudio::callOnAudioReady(AAudioStream *stream,
 }
 
 void AudioStreamAAudio::onErrorInThread(AAudioStream *stream, Result error) {
-    LOGD("onErrorInThread() - entering ===================================");
-    assert(stream == mAAudioStream.load());
+    LOGD("onErrorInThread() - entering ===================================!");
+    AAudioStream *currentStream = mAAudioStream.load();
+    if (stream != currentStream) {
+        LOGW("Stream changed. Ignoring the error handling.");
+        return;
+    }
     requestStop();
     if (mStreamCallback != nullptr) {
         mStreamCallback->onErrorBeforeClose(this, error);
@@ -276,7 +280,7 @@ void AudioStreamAAudio::onErrorInThread(AAudioStream *stream, Result error) {
     if (mStreamCallback != nullptr) {
         mStreamCallback->onErrorAfterClose(this, error);
     }
-    LOGD("onErrorInThread() - exiting ===================================");
+    LOGD("onErrorInThread() - exiting ===================================!");
 }
 
 Result AudioStreamAAudio::requestStart() {
